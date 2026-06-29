@@ -1,59 +1,8 @@
 # MKD: Multimodal Knowledge Distillation For Molecular Property Prediction
 
-**MKD** is a multimodal molecular property prediction framework based on **Multimodal Knowledge Distillation**.
-
-Multimodal molecular representation learning has shown promising potential for molecular property prediction, but existing methods often suffer from modality utilization imbalance and insufficient fusion of heterogeneous information. To address this issue, we propose a unified multimodal knowledge distillation framework (MKD) for molecular property prediction.
-
-We integrate **SMILES**, **molecular graph**, **3D geometry**, and **LLM-generated molecular text** to construct more comprehensive molecular representations. To enable effective multimodal learning, MKD introduces a cross-knowledge distillation mechanism for representation alignment and knowledge transfer across modalities, together with adaptive fusion modeling to dynamically adjust modality contributions. Experimental results show that the method achieves competitive performance, and further analysis indicates more balanced utilization of different modalities.
-
 ![MKD framework](assets/framework.png)
 
-## Overview
-
-The intended workflow is:
-
-1. Configure the Python environment.
-2. Provide dataset file paths for available molecular modalities.
-3. Train available unimodal teachers.
-4. Train the multimodal student through cross-knowledge distillation and adaptive fusion.
-
-The current implementation supports:
-
-- **1D SMILES teacher**: Transformer
-- **2D graph teacher**: PCQM4Mv2/OGB-style graph conversion + GIN
-- **3D geometry teacher**: SDF conformers + SchNet
-- **LLM Text teacher**: molecular description text + ChemBERTa
-- **Student**: available modalities + CKD + CMIG + adaptive fusion
-
-## Modality Example
-
-The repository includes a tiny data example based on the molecule `CC(=O)NC1=CC=C(C=C1)O`.
-
-![Molecular modality example](assets/modality.png)
-
-The example files are:
-
-```text
-data/example/data.csv
-data/example/llm_text.csv
-```
-
-## 1. Environment
-
-Create the recommended conda environment:
-
-```bash
-conda env create -f environment.yml
-conda activate mkd-mpp
-```
-
-Or install with pip:
-
-```bash
-pip install -e .
-```
-
-For real 2D/3D training, make sure these packages are available:
+For 2D/3D training, make sure these packages are available:
 
 - `torch`
 - `torch-geometric`
@@ -66,84 +15,11 @@ For real 2D/3D training, make sure these packages are available:
 - `transformers`
 - `tokenizers`
 
-## 2. Dataset Files
+## 1. Dataset Files
 
-The project does not download or modify datasets automatically. You provide paths in the config or command line.
+This project includes the LLM_Text dataset from the paper: ```dataset/data_100k_with_llm_text.csv```. The complete original 1D data of PCQM4Mv2 should be obtained from the official OGB documentation (https://ogb.stanford.edu/docs/lsc/pcqm4mv2/) and the dataset path should be provided through a configuration file or command-line parameters.
 
-### Packaged Local Files
-
-The release zip can include one compact local CSV file for convenience:
-
-```text
-dataset/data_100k_with_llm_text.csv
-```
-
-- `dataset/data_100k_with_llm_text.csv` is a compact 100K PCQM4Mv2-style subset with SMILES, target values, and an attached `llm_text` description column for the LLM Text modality.
-
-The full original PCQM4Mv2 1D data should be obtained from the official OGB source rather than committed to this repository. Dataset paths can be supplied through config files or command-line arguments.
-
-For official PCQM4Mv2 details, see the OGB documentation: https://ogb.stanford.edu/docs/lsc/pcqm4mv2/. The official page explains the original 1D SMILES/target data, 2D graph construction from SMILES, the `smiles2graph` utility, the graph dictionary format, the official split, and the downloadable 3D SDF conformer file.
-
-### 1D CSV
-
-Required. It must contain at least:
-
-```csv
-idx,smiles,homolumogap
-0,O=C1...,3.0476
-1,COc1...,4.4109
-```
-
-Default columns:
-
-- `idx`: molecule index, used for official PCQM4Mv2 split, SDF alignment, and LLM text alignment.
-- `smiles`: SMILES string.
-- `homolumogap`: regression label.
-
-### 2D Graph
-
-Use:
-
-```bash
---graph-path pcqm4mv2
-```
-
-This enables official PCQM4Mv2/OGB-style conversion from SMILES to graph dictionaries through `src/mkd_mpp/pcqm4mv2.py`. No graph file is written.
-
-### 3D Geometry
-
-Provide a full PCQM4Mv2 SDF file:
-
-```bash
---geometry-path path/to/pcqm4m-v2-train.sdf
-```
-
-The CSV `idx` is assumed to match the SDF molecule order exactly. The loader builds a lightweight `.idx.pkl` cache next to the SDF file for lazy random access.
-
-The cache file is named after the SDF, for example:
-
-```text
-pcqm4m-v2-train.sdf.idx.pkl
-```
-
-It stores molecule byte offsets only. Delete it if the SDF file changes.
-
-### LLM Text
-
-Provide a separate CSV with `idx` and `llm_text`:
-
-```csv
-idx,llm_text
-0,This molecule has canonical SMILES...
-1,This molecule contains...
-```
-
-The LLM text file must align with the main CSV by `idx`.
-
-- If alignment is inconsistent, training raises an error.
-- If some selected samples lack text and `skip_missing_llm_text: true`, those samples are skipped.
-
-## 3. Configs
+## 2. Configs
 
 Main configs:
 
