@@ -23,6 +23,7 @@ Python: 3.10
 PyTorch: >= 2.1
 PyG: >= 2.5
 RDKit: >= 2023.09
+```
 
 Run 1D + 2D + 3D + LLM Text pretraining:
 
