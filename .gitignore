@@ -1,0 +1,64 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environments
+.venv/
+venv/
+env/
+.env
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Data and experiment outputs
+data/*
+!data/example/
+!data/example/**
+dataset/*
+!dataset/
+!dataset/data_100k_with_llm_text.csv
+datasets/
+checkpoints/
+runs/
+outputs/
+logs/
+wandb/
+
+# Large local artifacts
+*.pt
+*.pth
+*.ckpt
+*.npz
+*.npy
+*.zip
+*.pdf
+*.pptx
+*.xlsx
+*_extracted.txt
+
+# Local research/manuscript materials
+exp/
+pic/
+妯℃€佷笉骞宠　/
+media.txt
+revised_manuscript_extracted.txt
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local research folder with Chinese path name
+妯℃€佷笉骞宠　/
+

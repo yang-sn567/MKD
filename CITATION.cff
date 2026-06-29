@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+title: "MKD: Multimodal Knowledge Distillation For Molecular Property Prediction"
+message: "If you use this project, please cite the associated paper."
+type: software
+authors:
+  - name: "MKD-MPP Contributors"
+version: "0.1.0"
+license: MIT

@@ -1,0 +1,61 @@
+seed: 42
+device: auto
+
+data:
+  data_path: data/example/data.csv
+  one_d_path: data/example/data.csv
+  graph_path: pcqm4mv2
+  geometry_path:
+  llm_text_path: data/example/llm_text.csv
+  smiles_column: smiles
+  label_column: homolumogap
+  split_column: split
+  text_column: llm_text
+  task_type: regression
+  num_tasks: 1
+  split_method: csv
+  split_root: dataset
+  skip_missing_llm_text: false
+
+model:
+  hidden_dim: 32
+  output_dim: 1
+  dropout: 0.1
+  modalities:
+    - smiles
+    - graph
+    - llm_text
+  transformer:
+    vocab_size: 128
+    max_length: 128
+    num_layers: 1
+    num_heads: 4
+  gin:
+    num_layers: 1
+  schnet:
+    max_atomic_number: 100
+    num_interactions: 1
+    cutoff: 10.0
+  text:
+    encoder_type: chemberta
+    pretrained_model_name: DeepChem/ChemBERTa-77M-MTR
+    freeze_encoder: true
+    use_safetensors: true
+    pooling: cls
+    max_length: 128
+
+training:
+  batch_size: 4
+  epochs: 1
+  learning_rate: 0.001
+  weight_decay: 0.0
+  lambda_kd: 1.0
+  lambda_cross: 0.1
+  lambda_cf: 0.0
+  temperature: 1.0
+  checkpoint_dir: checkpoints/smoke
+  output_dir: outputs/smoke
+  early_stopping_patience: 2
+  train_teachers: true
+  train_student: true
+  require_teacher_checkpoints: true
